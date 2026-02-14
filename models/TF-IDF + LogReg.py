@@ -4,13 +4,22 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
 
-from data import df
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+# load data
+df = pd.read_json("hf://datasets/sh0416/ag_news/train.jsonl", lines=True)
+
+
+
 
 
 # Split train/dev/test
-train_df, temp_df = train_test_split(df, test_size=0.2, random_state=42, shuffle=True)
+train_df, temp_df = train_test_split(
+    df, test_size=0.2, random_state=42, shuffle=True, stratify=df["label"]
+)
 dev_df, test_df = train_test_split(
-    temp_df, test_size=0.5, random_state=42, shuffle=True
+    temp_df, test_size=0.5, random_state=42, shuffle=True, stratify=temp_df["label"]
 )
 
 

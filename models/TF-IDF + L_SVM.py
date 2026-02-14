@@ -4,13 +4,15 @@ from sklearn.svm import LinearSVC
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
 
-from data import df
+from models.data import df
 
 
 # Split train/dev/test
-train_df, temp_df = train_test_split(df, test_size=0.2, random_state=42, shuffle=True)
+train_df, temp_df = train_test_split(
+    df, test_size=0.2, random_state=42, shuffle=True, stratify=df["label"]
+)
 dev_df, test_df = train_test_split(
-    temp_df, test_size=0.5, random_state=42, shuffle=True
+    temp_df, test_size=0.5, random_state=42, shuffle=True, stratify=temp_df["label"]
 )
 
 
