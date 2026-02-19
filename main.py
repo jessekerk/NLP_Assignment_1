@@ -1,22 +1,23 @@
 from models.tfidf_logreg import run_tfidf_logreg
 from models.tfidf_lsvm import run_tfidf_lsvm
 
+def print_results(name: str, results: dict, split: str):
+    print(f"=== {name} ({split}) ===")
+    print(f"{split} accuracy: {results['accuracy']:.4f}")
+    print(results["report"])
+    print("Confusion matrix:")
+    print(results["confusion_matrix"])
+    print()
+
+
 def main():
-    logreg_results = run_tfidf_logreg()
+    # dev set metrics
+    print_results("TF-IDF + Logistic Regression", run_tfidf_logreg("dev"), "dev")
+    print_results("TF-IDF + Linear SVM", run_tfidf_lsvm("dev"), "dev")
 
-    print("=== TF-IDF + Logistic Regression ===")
-    print(f"Dev accuracy: {logreg_results['accuracy']:.4f}")
-    print(logreg_results["report"])
-    print("Confusion matrix:")
-    print(logreg_results["confusion_matrix"])
-
-    lsvm_results = run_tfidf_lsvm()
-
-    print("=== TF-IDF + Linear SVM ===")
-    print(f"Dev accuracy: {lsvm_results['accuracy']:.4f}")
-    print(lsvm_results["report"])
-    print("Confusion matrix:")
-    print(lsvm_results["confusion_matrix"])
+    # test set metrics (only uncomment when writing the report)
+    # print_results("TF-IDF + Logistic Regression", run_tfidf_logreg("test"), "test")
+    # print_results("TF-IDF + Linear SVM", run_tfidf_lsvm("test"), "test")
 
 
 if __name__ == "__main__":

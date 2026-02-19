@@ -1,32 +1,18 @@
-import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
+from data.data import dev_df, test_df, train_df
+from models.utilities import get_text_series
 
-from data.data import train_df, dev_df
 
-
-def run_tfidf_logreg():
-    def get_text_series(frame: pd.DataFrame) -> pd.Series:
-        """Gets title + description as a data point (Missing vals are replaces w/ empty strings)
-
-        Args:
-            frame (pd.DataFrame): dataframe with column title and description
-
-        Returns:
-            pd.Series: the concatenated, cleaned data consisting of title and description
-        """
-        return (
-            frame["title"].fillna("") + " " + frame["description"].fillna("")
-        ).str.strip()
-
-    # texts
+def run_tfidf_logreg(split: str = "dev"):
     train_texts = get_text_series(train_df)
-    dev_texts = get_text_series(dev_df)
-
     y_train = train_df["label"]
-    y_dev = dev_df["label"]
+
+    eval_df = dev_df if split == "dev" else test_df
+    eval_texts = get_text_series(eval_df)
+    y_eval = eval_df["label"]
 
     vectorizer = TfidfVectorizer(
         lowercase=True,
@@ -37,15 +23,15 @@ def run_tfidf_logreg():
     )
 
     X_train = vectorizer.fit_transform(train_texts)
-    X_dev = vectorizer.transform(dev_texts)
+    X_eval = vectorizer.transform(eval_texts)
 
     model = LogisticRegression(max_iter=1000, solver="lbfgs")
     model.fit(X_train, y_train)
 
-    y_pred = model.predict(X_dev)
+    y_pred = model.predict(X_eval)
 
     return {
-        "accuracy": accuracy_score(y_dev, y_pred),
-        "report": classification_report(y_dev, y_pred),
-        "confusion_matrix": confusion_matrix(y_dev, y_pred),
+        "accuracy": accuracy_score(y_eval, y_pred),
+        "report": classification_report(y_eval, y_pred),
+        "confusion_matrix": confusion_matrix(y_eval, y_pred),
     }
