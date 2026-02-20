@@ -16,8 +16,8 @@ def main():
     print_results("TF-IDF + Linear SVM", run_tfidf_lsvm("dev"), "dev")
 
     # test set metrics (only uncomment when writing the report)
-    # print_results("TF-IDF + Logistic Regression", run_tfidf_logreg("test"), "test")
-    # print_results("TF-IDF + Linear SVM", run_tfidf_lsvm("test"), "test")
+    print_results("TF-IDF + Logistic Regression", run_tfidf_logreg("test"), "test")
+    print_results("TF-IDF + Linear SVM", run_tfidf_lsvm("test"), "test")
 
 
 if __name__ == "__main__":
